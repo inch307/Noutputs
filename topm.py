@@ -42,12 +42,9 @@ class TOPM():
     def get_beta(self):
         if self.eps_k > 0 and self.eps_k < 0.610986:
             beta = 0
-            print('beta0')
         elif self.eps_k < np.log(2):
-            print('beta1')
             beta = (2*(np.exp(self.eps_k) - self.P0_0)**2 * (np.exp(self.eps_k) -1) - self.P0_0 * np.exp(self.eps_k) * (np.exp(self.eps_k) + 1)**2) / (2 * (np.exp(self.eps_k)-self.P0_0)**2 * (np.exp(self.eps_k) + self.t) - self.P0_0 * np.exp(self.eps_k) * (np.exp(self.eps_k) + 1)**2)
         else:
-            print('beta3')
             c = np.exp(self.eps_k)
             A = self.P0_0**2 * c**2 * (c+1)**4 / (4 * (c + self.t)**2 * (c - self.P0_0)**4 * (c-1)) - self.P0_0**2 * c**2 * (c+1)**4 / (2 * (c+self.t)**2 * (c-1) * (c-self.P0_0)**4) + ( (self.t+1)**3 + c - 1) / (3 * self.t**2 * (c - 1)**2) - (1 - self.P0_0) * c**2 * (c+1)**2 / ((c+self.t)*(c-1)**2 * (c-self.P0_0)**2)
             B = -(1 + self.t)**2 * self.P0_0**2 * c**2 * (c+1)**4 / (4* (c+self.t)**2 * (c-self.P0_0)**4 * (c-1))
@@ -80,6 +77,13 @@ class TOPM():
             V = (1 - self.P0_0) * self.C**2 + self.C**4 * b**2 / 4
         else:
             V = (1 - self.P0_0 + b) * self.C**2 - 1
+        # if self.eps_k < np.log(2):
+        #     V = (np.exp(self.eps_k) + 1)**2 / (np.exp(self.eps_k) - 1)**2
+        # elif self.eps_k < np.log((3 + np.sqrt(65))/ 2):
+        #     V = ((np.exp(self.eps_k) + 1)**2 * np.exp(self.eps_k * 2) / (np.exp(self.eps_k)-1)**2) * ( (1-self.P0_0) / (np.exp(self.eps_k) - self.P0_0)**2 + (np.exp(self.eps_k)+1)**2 * self.P0_0**2 / (4 * (np.exp(self.eps_k) - self.P0_0)**4)  )
+        # else:
+        #     print('aweaweqaweawe')
+        #     V = (np.exp(self.eps_k) + 2) * (np.exp(self.eps_k) + 10) / (4 * np.exp(self.eps_k) - 1)**2
 
         return V
     
@@ -130,7 +134,7 @@ class TOPM():
 
         x_star = (self.beta - 1) * self.P0_0 * np.exp(self.eps_k) * (np.exp(self.eps_k) + 1)**2 / ( 2 * (np.exp(self.eps_k) - self.P0_0)**2 * (self.beta * (np.exp(self.eps_k) + self.t) - np.exp(self.eps_k) + 1))
         # print(f'x_star is {x_star}')
-        print(f'V at x* is {self.HM_var(x_star)}')
+        # print(f'V at x* is {self.HM_var(x_star)}')
         return self.HM_var(x_star)
 
         
@@ -153,4 +157,4 @@ class TOPM():
 if __name__ == '__main__':
     eps = 2
     topm = TOPM(1, eps, np.exp(eps/3))
-    topm.HM_max_var()
+    print(topm.HM_max_var())

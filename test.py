@@ -3,4 +3,5 @@ import math
 import cmath
 import numpy as np
 
-print(min([1, 2, 3,]))
+a = 3*3**2*(2)**2
+print(a)

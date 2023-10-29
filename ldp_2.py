@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import cmath
 
-eps = 2
+eps = 2.8
 
 
 x = np.linspace(-1, 1, 1000)

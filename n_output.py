@@ -43,18 +43,20 @@ class NOUTPUT():
             ais.append(a_n_1)
 
             for i in range(n-2):
-                print('a_'+str(i))
-                print(2*ais[-1]*( 2*(math.exp(self.eps_k)-1)*P - 1 ) - ais[-2])
+                # print('a_'+str(i))
+                # print(2*ais[-1]*( 2*(math.exp(self.eps_k)-1)*P - 1 ) - ais[-2])
                 ais.append(2*ais[-1]*( 2*(math.exp(self.eps_k)-1)*P - 1 ) - ais[-2])
 
             ais = make_a(ais)
 
             bias = np.sum(ais**2 * P)
-            max_var = 2 * bias + (ais[-2] + ais[-1])**2/4 - (math.exp(self.eps_k)-1) * P * ais[-1] * ais[-2]
+            max_var = bias + (ais[-2] + ais[-1])**2/4 - (math.exp(self.eps_k)-1) * P * ais[-1] * ais[-2]
 
             self.mech.append({'N': N, 'ais': ais, 'V': max_var, 'type': 0})
 
     def equal_gen(self):
+        if len(self.n_out_1)==0:
+            return
         N = min(self.n_out_1)
         for i in range(1, 5):
             if N-i <= 3:
@@ -81,12 +83,15 @@ class NOUTPUT():
             ais = make_a(ais)
 
             bias = np.sum(ais**2 * P)
-            max_var = 2 * bias + (ais[-2] + ais[-1])**2/4 - (math.exp(self.eps_k)-1) * P * ais[-1] * ais[-2]
+            max_var = bias + (ais[-2] + ais[-1])**2/4 - (math.exp(self.eps_k)-1) * P * ais[-1] * ais[-2]
 
             self.mech.append({'N': N - i, 'ais': ais, 'V': max_var, 'type': 1})
 
     def get_max_var(self):
-        return
+        min_v = 100
+        for m in self.mech:
+            min_v = min(min_v, m['V'])
+        return min_v
             
 def make_a(ais):
     # for i in range(n-2):
@@ -114,13 +119,13 @@ def find_N(eps):
         T = get_T(eps, N)
         a_1 = general_a(T, a_n, a_n_1, n, 1).real
 
-        print(f'a_1 is {a_1} > 0')
+        # print(f'a_1 is {a_1} > 0')
 
         V_n = get_var_at_n(eps, a_n, a_n_1, P)
         V_0 = get_var_at_0(eps, N, P , a_1)
-        print(f'variance at a_n is {V_n}')
-        print(f'variance at 0 is {V_0}')
-        print(f'min condition is {V_n > V_0}')
+        # print(f'variance at a_n is {V_n}')
+        # print(f'variance at 0 is {V_0}')
+        # print(f'min condition is {V_n > V_0}')
 
         if V_n > V_0 and a_1 > 0:
             N_list.append(N)

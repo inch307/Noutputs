@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import cmath
 
-eps = 2.3
+eps = 2
 
 
 
