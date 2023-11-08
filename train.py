@@ -24,7 +24,13 @@ parser.add_argument('--lr', type=float, default=0.001)
 parser.add_argument('--cv_n', type=int, default=5, help='n-times cross validation')
 parser.add_argument('--cv_k', type=int, default=10, help='k-fold cross validation')
 parser.add_argument('--lam', type=float, default=0, help='regularization factor')
-parser.add_argument('--batch_size', type=int, default=32)
+parser.add_argument('--epoch', type=int, default=3)
+
+# parser.add_argument('--rounds', type=int, default=30)
+parser.add_argument('--total_nodes', type=int, default=100)
+parser.add_argument('--fraction', type=float, default=0.05)
+parser.add_argument('--batch_size', type=int, default=32, help='the batch size for each node')
+parser.add_argument('--num_users', type=int, default=32, help='num of users per epoch')
 
 args = parser.parse_args()
 
