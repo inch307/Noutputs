@@ -69,6 +69,16 @@ for eps in s:
     # V1.append(10* eps * (bias * 2  + (a_n + a_n1)**2 / 2 - a_n1))
 
 
+min_V = 1000
+min_s = -11
+for i in range(len(V1)):
+    if min_V > V1[i]:
+        min_V = V1[i]
+        min_s = i
+
+print(f'min s is : {s[min_s]}')
+
+
 plt.plot(s, V1)
 
 plt.show()

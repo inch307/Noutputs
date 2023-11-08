@@ -4,12 +4,12 @@ import numpy as np
 from matplotlib import pyplot as plt
 import cmath
 
-eps = 7
+eps = 5
 
 
 x = np.linspace(-1, 1, 1000)
 ais = []
-n = 7
+n = 4
 P =  1 / (math.exp(eps) + 2*n)
 
 print(f'e^eps = {math.exp(eps)}')

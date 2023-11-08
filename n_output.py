@@ -92,6 +92,12 @@ class NOUTPUT():
         for m in self.mech:
             min_v = min(min_v, m['V'])
         return min_v
+    
+    def get_type0(self):
+        pass
+
+    def get_type1(self):
+        pass
             
 def make_a(ais):
     # for i in range(n-2):
