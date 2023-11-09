@@ -15,7 +15,7 @@ class NOUTPUT():
     def __init__(self, d, eps):
         self.d = d
         self.eps = eps
-        
+        print(eps)
         # TODO:
         self.k = max(1, min(d, math.floor(eps / 3)))
         self.eps_k = self.eps / self.k
@@ -28,13 +28,13 @@ class NOUTPUT():
         # find all same
         self.equal_gen()
 
-        min_V = 10000
-        min_ais = None
-        for m in self.mech:
-            if m['V'] < min_V:
-                min_ais = m['ais']
-        self.min_ais = min_ais
-        self.N = len(min_ais)
+        # min_V = 10000
+        # min_ais = None
+        # for m in self.mech:
+        #     if m['V'] < min_V:
+        #         min_ais = m['ais']
+        # self.min_ais = min_ais
+        # self.N = len(min_ais)
 
     def gen_mech(self):
         for N in self.n_out_1:
@@ -64,8 +64,9 @@ class NOUTPUT():
 
     def equal_gen(self):
         if len(self.n_out_1)==0:
-            return
-        N = min(self.n_out_1)
+            N = find_N2(self.eps_k)
+        else:
+            N = min(self.n_out_1)
         for i in range(1, 5):
             if N-i <= 3:
                 break
@@ -88,7 +89,7 @@ class NOUTPUT():
 
             for C in reversed(coef_lst):
                 ais.append(ais[-1] * C)
-            ais = make_a(ais, N)
+            ais = make_a(ais, N-i)
 
             bias = np.sum(ais**2 * P)
             max_var = bias + (ais[-2] + ais[-1])**2/4 - (math.exp(self.eps_k)-1) * P * ais[-1] * ais[-2]
@@ -157,6 +158,36 @@ def find_N(eps):
             break
 
     return N_list
+
+def find_N2(eps):
+    max_N = 4
+
+    for N in range(4, 1000):
+        # print(f' checking {N}')
+        if N % 2 == 0:
+            n = N / 2
+        else:
+            n = (N-1) / 2
+        P = get_P_n(eps, N)
+        a_n = get_a_n(eps, N)
+        a_n_1 = get_a_n_1(eps, N)
+        T = get_T(eps, N)
+        a_1 = general_a(T, a_n, a_n_1, n, 1).real
+
+        # print(f'a_1 is {a_1} > 0')
+
+        V_n = get_var_at_n(eps, a_n, a_n_1, P)
+        V_0 = get_var_at_0(eps, N, P , a_1)
+        # print(f'variance at a_n is {V_n}')
+        # print(f'variance at 0 is {V_0}')
+        # print(f'min condition is {V_n > V_0}')
+
+        if a_1 > 0:
+            max_N = N
+        else:
+            break
+
+    return max_N
 
 def general_a(T, a_n, a_n_1, n, k):
     a_k = ((a_n * (T+cmath.sqrt(T**2 - 1)) - a_n_1) * (T-cmath.sqrt(T**2-1))**(n-k) + (a_n_1 - a_n*(T-cmath.sqrt(T**2-1))) * (T+cmath.sqrt(T**2-1))**(n-k)) / (2*cmath.sqrt(T**2-1))

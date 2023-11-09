@@ -82,11 +82,11 @@ def NO_PM_var(eps, beta = None, x_star = None):
     
     if beta is None:
         beta = (A + np.sqrt(T_2 / T_1)) / (1 + A)
-    print(f'beta is {(A + np.sqrt(T_2 / T_1)) / (1 + A)}')
+    # print(f'beta is {(A + np.sqrt(T_2 / T_1)) / (1 + A)}')
 
     if x_star is None:
         x_star = beta * (a_n + a_n_1) / 2 / (beta + A * beta - A)
-    print(f'x_star is {beta * (a_n + a_n_1) / 2 / (beta + A * beta - A)}')
+    # print(f'x_star is {beta * (a_n + a_n_1) / 2 / (beta + A * beta - A)}')
 
     return (1-beta) * (A* x_star**2 + B) + beta * (bias + (a_n + a_n_1)*x_star - a_n_1 - x_star**2)
     
@@ -112,7 +112,7 @@ plt.plot(eps, Duchi_max_var(eps), label='duchi')
 # plt.plot(eps, PM_max_var(eps), label='PM')
 
 plt.plot(eps, PM_sub_max_var(eps), label='PM_sub')
-print(PM_sub_max_var(2))
+# print(PM_sub_max_var(2))
 
 V1 = []
 V2 = []

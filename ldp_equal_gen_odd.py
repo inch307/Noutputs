@@ -4,13 +4,13 @@ import numpy as np
 from matplotlib import pyplot as plt
 import cmath
 
-eps = 5
+eps = 3.7
 
 
 
 x = np.linspace(-1, 1, 1000)
 ais = []
-n = 3
+n = 2
 P =  1 / (math.exp(eps) + 2*n)
 
 print(f'e^eps = {math.exp(eps)}')
@@ -71,6 +71,7 @@ for i in range(n-2):
 # plt.show()
 for C in reversed(coef_lst):
     ais.append(ais[-1] * C)
+ais[1] += 0.28
 
 
 # print(ais[-1])
@@ -105,7 +106,7 @@ def make_a(ais):
     for i in ais:
         minus_ais.append(-i)
     
-    return np.array(minus_ais + rev_ais)
+    return np.array(minus_ais + [0] + rev_ais)
 
 ais = make_a(ais)
 print(ais)
