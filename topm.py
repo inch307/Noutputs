@@ -2,13 +2,16 @@ import math
 import numpy as np
 
 class TOPM():
-    def __init__(self, d, eps):
+    def __init__(self, d, eps, t=None):
         self.d = d
         self.eps = eps
         # eps_star for TO_single
         self.k = max(1, min(d, math.floor(eps / 2.5)))
         self.eps_k = self.eps / self.k
-        self.t = np.exp(self.eps_k / 3)
+        if t is None:
+            self.t = np.exp(self.eps_k / 3)
+        else:
+            self.t = t
         self.P0_0, self.C, self.Px_1, self.Px_2 = self.get_Ps()
 
         self.A = (np.exp(self.eps_k) + self.t) * (self.t + 1) / (self.t * (np.exp(self.eps_k)-1))

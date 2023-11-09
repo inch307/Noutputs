@@ -41,7 +41,7 @@ class PM():
         return y
     
     def HM_max_var(self):
-
+        return
         
     def HM_multi(self, x):
         original_shape = x.shape

@@ -22,17 +22,32 @@ class Duchi():
 
         self.B = self.C_d * (np.exp(eps) + 1) / (np.exp(eps) - 1)
 
-    def Duchi_single(self, x, eps):
-        u = np.random.choice([-1, 1], 1, p = [-x * (np.exp(eps)-1) / (2*np.exp(eps) + 2)  + 0.5  , x * (np.exp(eps)-1) / (2*np.exp(eps) + 2)  + 0.5])    
-        return u * (np.exp(eps) + 1) / (np.exp(eps) - 1)
+    def Duchi_single(self, x):
+        u = np.random.choice([-1, 1], 1, p = [-x * (np.exp(self.eps)-1) / (2*np.exp(self.eps) + 2)  + 0.5  , x * (np.exp(self.eps)-1) / (2*np.exp(self.eps) + 2)  + 0.5])    
+        return u * (np.exp(self.eps) + 1) / (np.exp(self.eps) - 1)
 
-    def Duchi_var(self, x, eps):
-        return ((np.exp(eps) + 1) / (np.exp(eps) - 1))**2 - x**2
+    def Duchi_var(self, x):
+        return ((np.exp(self.eps) + 1) / (np.exp(self.eps) - 1))**2 - x**2
     
     def Duchi_max_var(self):
         return
+    
+    def Duchi_single_unif(self, x):
+        original_shape = x.shape
+        x = x.reshape(-1)
+        d = len(x)
+        noisy_x = []
 
-    def Duchi_multi(self, x, eps):
+        eps = self.eps/d
+
+        for element in x:
+            u = np.random.choice([-1, 1], 1, p = [-element * (np.exp(eps)-1) / (2*np.exp(eps) + 2)  + 0.5  , element * (np.exp(eps)-1) / (2*np.exp(eps) + 2)  + 0.5])    
+            noisy_x.append(u * (np.exp(eps) + 1) / (np.exp(eps) - 1))
+        
+        return np.array(noisy_x).reshape(original_shape)
+
+
+    def Duchi_multi(self, x):
         original_shape = x.shape
         x = x.reshape(self.d)
         v = []
@@ -45,7 +60,7 @@ class Duchi():
         T_plus = np.where(np.any(Tv >= 0, axis=1))[0]
         T_minus = np.where(np.any(Tv <= 0, axis=1))[0]
 
-        u = np.random.choice([0, 1], 1, p = [1 / (np.exp(eps) + 1) , np.exp(eps) / (np.exp(eps) + 1)])
+        u = np.random.choice([0, 1], 1, p = [1 / (np.exp(self.eps) + 1) , np.exp(self.eps) / (np.exp(self.eps) + 1)])
 
         if u == 0:
             R_T = self.T[np.random.choice(T_minus, 1)]

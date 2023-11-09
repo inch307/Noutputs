@@ -28,6 +28,14 @@ class NOUTPUT():
         # find all same
         self.equal_gen()
 
+        min_V = 10000
+        min_ais = None
+        for m in self.mech:
+            if m['V'] < min_V:
+                min_ais = m['ais']
+        self.min_ais = min_ais
+        self.N = len(min_ais)
+
     def gen_mech(self):
         for N in self.n_out_1:
             ais = []
@@ -47,7 +55,7 @@ class NOUTPUT():
                 # print(2*ais[-1]*( 2*(math.exp(self.eps_k)-1)*P - 1 ) - ais[-2])
                 ais.append(2*ais[-1]*( 2*(math.exp(self.eps_k)-1)*P - 1 ) - ais[-2])
 
-            ais = make_a(ais)
+            ais = make_a(ais, N)
 
             bias = np.sum(ais**2 * P)
             max_var = bias + (ais[-2] + ais[-1])**2/4 - (math.exp(self.eps_k)-1) * P * ais[-1] * ais[-2]
@@ -80,7 +88,7 @@ class NOUTPUT():
 
             for C in reversed(coef_lst):
                 ais.append(ais[-1] * C)
-            ais = make_a(ais)
+            ais = make_a(ais, N)
 
             bias = np.sum(ais**2 * P)
             max_var = bias + (ais[-2] + ais[-1])**2/4 - (math.exp(self.eps_k)-1) * P * ais[-1] * ais[-2]
@@ -98,8 +106,11 @@ class NOUTPUT():
 
     def get_type1(self):
         pass
+
+    def NO_single(self):
+        return
             
-def make_a(ais):
+def make_a(ais, N):
     # for i in range(n-2):
         
     rev_ais = list(reversed(ais))
@@ -107,7 +118,10 @@ def make_a(ais):
     for i in ais:
         minus_ais.append(-i)
     
-    return np.array(minus_ais + rev_ais)
+    if N % 2 == 0:
+        return np.array(minus_ais + rev_ais)
+    else:
+        return np.array(minus_ais + [0] + rev_ais)
 
 def find_N(eps):
     N_list = []
