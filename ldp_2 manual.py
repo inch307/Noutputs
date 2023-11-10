@@ -3,7 +3,7 @@ import math
 import numpy as np
 from matplotlib import pyplot as plt
 import cmath
-
+import topm
 eps = 2.6
 
 
@@ -25,7 +25,8 @@ ais.append(a_n)
 # print(a_n)
 # append min a_n-1
 a_n1 = ((2*(math.exp(eps) -1)*P - 1) * a_n) / (8*P + 1)
-ais.append( ((2*(math.exp(eps) -1)*P - 1) * a_n) / (8*P + 1))
+# ais.append( ((2*(math.exp(eps) -1)*P - 1) * a_n) / (8*P + 1))
+ais.append(0.6)
 # print( ((2*(math.exp(eps) -1)*P - 1) * a_n) / (8*P + 1) )
 # print( ((2*(math.exp(eps) -1)*P - 1) ) / (8*P + 1) )
 
@@ -129,7 +130,17 @@ dks = np.arange(0, 10, 0.01)
 for dk in dks:
     dk*bias + (ais[-1] + ais[-2])**2
 
-plt.plot(x, var)
+plt.plot(x, var, label='Noutputs')
+
+to = topm.TOPM(1, eps)
+plt.plot(x, to.TO_var(x), label='3-O')
+
+def PM_Var(x, eps):
+    t = np.exp(eps/3)
+    return (t+1) * x**2 / (np.exp(eps)-1) + (t +np.exp(eps)) * (((t+1)**3) + np.exp(eps) - 1) / (3*t**2 * (np.exp(eps) -1)**2)
+
+plt.plot(x, PM_Var(x, eps), label='PM')
+plt.legend()
 plt.show()
 
 

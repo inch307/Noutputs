@@ -131,12 +131,12 @@ for e in eps:
     V6.append(TO_NO_var(to, e))
 
 
-plt.plot(eps, V1, label='Duchi-Pm')
+# plt.plot(eps, V1, label='Duchi-Pm')
 plt.plot(eps, V2, label='TO')
 plt.plot(eps, V3, label='N_outputs')
 plt.plot(eps, V4, label='HM_TP')
-plt.plot(eps, V5, label='HM_NO_PM')
-plt.plot(eps, V6, label='TO_NO_PM')
+# plt.plot(eps, V5, label='HM_NO_PM')
+plt.plot(eps, V6, label='TO_NO_HM')
 
 
 plt.legend()
