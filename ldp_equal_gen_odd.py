@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import cmath
 
-eps = 3.7
+eps = 3.68
 
 
 
@@ -41,7 +41,8 @@ ais.append(a_n)
 
 # n
 t = (math.exp(eps)-1)*P
-coef_lst = [1/(4*t-1)]
+coef_lst = [1/(4*t-2)]
+print(coef_lst)
 
 for i in range(n-2):
     C = coef_lst[i]
@@ -71,7 +72,6 @@ for i in range(n-2):
 # plt.show()
 for C in reversed(coef_lst):
     ais.append(ais[-1] * C)
-ais[1] += 0.28
 
 
 # print(ais[-1])

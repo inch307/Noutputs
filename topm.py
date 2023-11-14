@@ -12,13 +12,22 @@ class TOPM():
             self.t = np.exp(self.eps_k / 3)
         else:
             self.t = t
-        self.P0_0, self.C, self.Px_1, self.Px_2 = self.get_Ps()
+        self.P0_0, self.C = self.get_Ps()
 
+        self.Px_0, self.Px_1 = self.construct_prob()
+
+        # for piecewise mech
         self.A = (np.exp(self.eps_k) + self.t) * (self.t + 1) / (self.t * (np.exp(self.eps_k)-1))
 
         # HM
         self.beta = self.get_beta()
         self.x_star = (self.beta - 1) * self.P0_0 * np.exp(self.eps_k) * (np.exp(self.eps_k) + 1)**2 / ( 2 * (np.exp(self.eps_k) - self.P0_0)**2 * (self.beta * (np.exp(self.eps_k) + self.t) - np.exp(self.eps_k) + 1))
+
+    def construct_prob(self):
+        Px_1 = (np.exp(self.eps_k) - self.P0_0) / (np.exp(self.eps_k) + 1) - (1 - self.P0_0) / 2
+        Px_0 = self.P0_0 / np.exp(self.eps_k) - self.P0_0
+
+        return Px_0, Px_1
 
     def get_Ps(self):
         if self.eps_k < np.log(2):
@@ -33,10 +42,7 @@ class TOPM():
 
         C = (np.exp(self.eps_k) + 1) / ((np.exp(self.eps_k)-1) * (1 - P0_0 / np.exp(self.eps_k)))
 
-        Px_1 = ( (1 - P0_0) / 2 - (np.exp(self.eps_k) - P0_0) / (np.exp(self.eps_k) * (np.exp(self.eps_k) + 1)) )
-        Px_2 = ( (np.exp(self.eps_k) - P0_0) / (np.exp(self.eps_k) + 1) - (1 - P0_0) / 2 )
-
-        return P0_0, C, Px_1, Px_2
+        return P0_0, C
 
     def get_beta(self):
         if self.eps_k > 0 and self.eps_k < 0.610986:
@@ -55,36 +61,33 @@ class TOPM():
         return beta
 
     def TO_single(self, x):
-        P_0_x = self.P0_0 + (self.P0_0 / np.exp(self.eps_k) - self.P0_0) * x
+        P_0_x = self.P0_0 + self.Px_0 * np.abs(x)
 
         if x >= 0 and x <= 1:
-            P_mC_x = (1 - self.P0_0) / 2 + self.Px_1 * x
+            P_C_x = (1 - self.P0_0) / 2 + self.Px_1 * np.abs(x)
+            P_mC_x = 1 - P_C_x - P_0_x
         else:
-            P_mC_x = (1 - self.P0_0) / 2 + self.Px_2 * x
-
-        if x >= 0 and x <= 1:
-            P_C_x = (1 - self.P0_0) / 2 + self.Px_2 * x
-        else:
-            P_C_x = (1 - self.P0_0) / 2 + self.Px_1 * x
+            P_mC_x = (1 - self.P0_0) / 2 + self.Px_1 * np.abs(x)
+            P_C_x = 1 - P_0_x - P_mC_x
 
         u = np.random.choice([-1, 0, 1], 1, p = [P_mC_x, P_0_x, P_C_x])
 
         return u * self.C
     
     def TO_max_var(self):
-        # b = self.P0_0 * (1 - 1/np.exp(self.eps_k))
+        b = self.P0_0 * (1 - 1/np.exp(self.eps_k))
 
-        # if self.C**2*b < 2:
-        #     V = (1 - self.P0_0) * self.C**2 + self.C**4 * b**2 / 4
-        # else:
-        #     V = (1 - self.P0_0 + b) * self.C**2 - 1
-
-        if self.eps_k < np.log(2):
-            return (np.exp(self.eps_k) + 1)**2 / (np.exp(self.eps_k) - 1)**2
-        elif self.eps_k <= np.log(5.53):
-            return np.exp(2*self.eps_k) * (np.exp(self.eps_k) + 1)**2 / (np.exp(self.eps_k) - 1)**2 * ( (1-self.P0_0) / (np.exp(self.eps_k) - self.P0_0)**2 + (np.exp(self.eps_k) + 1)**2 * self.P0_0**2 / ( 4 * (np.exp(self.eps_k - self.P0_0))**4) )
+        if self.C**2*b < 2:
+            V = (1 - self.P0_0) * self.C**2 + self.C**4 * b**2 / 4
         else:
-            return (np.exp(self.eps_k) + 2) * (np.exp(self.eps_k) + 10) / ( 4 * (np.exp(self.eps_k) -1)**2 )
+            V = (1 - self.P0_0 + b) * self.C**2 - 1
+
+        # if self.eps_k < np.log(2):
+        #     return (np.exp(self.eps_k) + 1)**2 / (np.exp(self.eps_k) - 1)**2
+        # elif self.eps_k <= np.log(5.53):
+        #     return np.exp(2*self.eps_k) * (np.exp(self.eps_k) + 1)**2 / (np.exp(self.eps_k) - 1)**2 * ( (1-self.P0_0) / (np.exp(self.eps_k) - self.P0_0)**2 + (np.exp(self.eps_k) + 1)**2 * self.P0_0**2 / ( 4 * (np.exp(self.eps_k - self.P0_0))**4) )
+        # else:
+        #     return (np.exp(self.eps_k) + 2) * (np.exp(self.eps_k) + 10) / ( 4 * (np.exp(self.eps_k) -1)**2 )
 
         # if self.eps_k < np.log(2):
         #     V = (np.exp(self.eps_k) + 1)**2 / (np.exp(self.eps_k) - 1)**2
@@ -134,6 +137,18 @@ class TOPM():
         
         return y
     
+    def PM_multi(self, x):
+        original_shape = x.shape
+        x = x.reshape(self.d)
+        y = np.zeros_like(x)
+
+        js = np.random.choice([i for i in range(self.d)], self.k, False, p=[1/self.d for i in range(self.d)])
+        
+        for j in js:
+            y[j] = self.d * self.PM_single(x[j]) / self.k
+
+        return y.reshape(original_shape)
+    
     def HM_single(self, x):
         if np.random.rand() > self.beta:
             y = self.TO_single(x)
@@ -182,6 +197,7 @@ class TOPM():
     
 
 if __name__ == '__main__':
-    eps = 2
+    eps = 1.3
     topm = TOPM(1, eps, np.exp(eps/3))
-    print(topm.HM_max_var())
+    topm.TO_single(0.5)
+    # print(topm.HM_max_var())

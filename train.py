@@ -41,7 +41,8 @@ args = parser.parse_args()
 # Pol, credit, adult
 
 # linear regression dataset
-# beijing housing  https://www.kaggle.com/code/ericliu123/beijing-houseprice-predict   https://www.kaggle.com/datasets/ruiqurm/lianjia
+# beijing housing**  https://www.kaggle.com/code/ericliu123/beijing-houseprice-predict   https://www.kaggle.com/datasets/ruiqurm/lianjia
+# beijinj air qual**
 # cal_housing
 # synth
 
@@ -49,8 +50,8 @@ args = parser.parse_args()
 # WISDM Human Activity Recognition dataset 
 
 # logistic and SVM dataset
-# KDD99 or NSL-KDD (binary)
-# adult dataset, or credit
+# KDD99 or NSL-KDD** (binary)
+# adult dataset, or credit card fraud detection**
 # synth
 
 X, y = utils.load_data(args)

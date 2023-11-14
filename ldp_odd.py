@@ -120,7 +120,8 @@ print(f'max var: {mv}')
 dv = (4*P + 0.5)*ais[-2] - ((math.exp(eps)-1) * P - 0.5)*ais[-1]
 print(f'd var: {dv}')
 # mmv = bias + (ais[-7] + ais[-6])**2/4 - (math.exp(eps)-1) * P * ais[-6] * ais[-7]
-# print(f'second max var: {mmv}')
+mmv = bias + ais[-2]**2/4
+print(f'second max var: {mmv}')
 # ddv = (4*P + 0.5)*ais[-7] - ((math.exp(eps)-1) * P - 0.5)*ais[-6]
 # print(f'second d var: {ddv}')
 # zv = bias + (math.exp(eps)-1)*P*ais[-2]**2

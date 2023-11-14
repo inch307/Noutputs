@@ -54,3 +54,16 @@ class PM():
             y[j] = self.d * self.HM_single(x[j]) / self.k
 
         return y.reshape(original_shape)
+    
+    def PM_multi(self, x):
+        original_shape = x.shape
+        x = x.reshape(self.d)
+        y = np.zeros_like(x)
+
+        js = np.random.choice([i for i in range(self.d)], self.k, False, p=[1/self.d for i in range(self.d)])
+        
+        for j in js:
+            y[j] = self.d * self.PM_single(x[j]) / self.k
+
+        return y.reshape(original_shape)
+

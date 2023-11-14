@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import cmath
 
-eps = 3.7
+eps = 2.89
 
 
 
@@ -41,6 +41,8 @@ ais.append(a_n)
 
 # n
 t = (math.exp(eps)-1)*P
+print(P)
+print(f't is {t}')
 coef_lst = [1/(4*t-1)]
 
 for i in range(n-2):
@@ -49,6 +51,7 @@ for i in range(n-2):
     print(f'root plus at {i}:  {(1-2*t + math.sqrt(C**2 + 2*C - 4*t*C +4*t**2 - 4*t + 1)) / (C**2 + 2*C - 4*t*C)}')
     print(f'root minus at {i}: {(1-2*t - math.sqrt(C**2 + 2*C - 4*t*C +4*t**2 - 4*t + 1)) / (C**2 + 2*C - 4*t*C)}')
     coef_lst.append((1-2*t + math.sqrt(C**2 + 2*C - 4*t*C +4*t**2 - 4*t + 1)) / (C**2 + 2*C - 4*t*C))
+print(f'coef {coef_lst}')
 
 # xx = np.arange(0, 1, 0.0001)
 # x = []
@@ -165,6 +168,8 @@ dv = (4*P + 0.5)*ais[-2] - ((math.exp(eps)-1) * P - 0.5)*ais[-1]
 print(f'd var: {dv}')
 mmv = bias + (ais[-3] + ais[-2])**2/4 - (math.exp(eps)-1) * P * ais[-2] * ais[-3]
 print(f'second max var: {mmv}')
+# ddv = (4*P + 0.5)*ais[-2] - ((math.exp(eps)-1) * P - 0.5)*ais[-1]
+# print(f'd var: {ddv}')
 # zv = bias + (math.exp(eps)-1)*P*ais[-2]**2
 # print(f'z var: {zv}')
 
